@@ -1,8 +1,12 @@
 pico-8 cartridge // http://www.pico-8.com
 version 35
 __lua__
+#include animation.lua
+#include garbage.lua
 #include boss.lua
 #include coin.lua
+#include belt.lua
+#include conveyer.lua
 #include hand.lua
 #include env.lua
 #include game.lua

@@ -33,7 +33,7 @@ function _draw()
   env:draw()
   hand:draw()
 
-  map(16, 0, 0, 0)
+  -- map(16, 0, 0, 0)
 
   print('good '..stats.good..' / bad '..stats.bad, 0, 0, 7)
 end
