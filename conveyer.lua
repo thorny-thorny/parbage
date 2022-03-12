@@ -34,7 +34,7 @@ function conveyer_update(self)
     local item = self.items[i]
     item.x -= self.speed
     if item.x < 0 then
-      -- self.on_fall(item)
+      self.on_fall(item)
       add(to_delete, item)
     end
   end
