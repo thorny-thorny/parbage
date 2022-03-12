@@ -63,9 +63,15 @@ function hand_update(self, env, conveyer)
     end
   end
 
+  local disposed_item = nil
+
   if btnp(🅾️) then
     if self.item then
       if self.can_drop then
+        disposed_item = {
+          item = self.item,
+          bin_type = bin_type,
+        }
         self.item = nil
       else
         if self.item.y >= conveyer.y * 8 and self.item.y <= (conveyer.y + conveyer.height - 1) * 8 then
@@ -90,6 +96,8 @@ function hand_update(self, env, conveyer)
     self.item.x = self.x
     self.item.y = self.y
   end
+
+  return disposed_item
 end
 
 function hand_draw(self)

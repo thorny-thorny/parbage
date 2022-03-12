@@ -85,4 +85,6 @@ function env_update(self)
       end
     end
   end
+
+  return stuck_items
 end
