@@ -18,6 +18,8 @@ local stats = {
 local pile = {
 }
 
+local boss = boss_create(20, 20)
+
 function make_pile_item(sprite)
   return {
     sprite = sprite,
@@ -150,6 +152,7 @@ function _update()
   update_hand()
   update_items()
   update_pile()
+  boss:update()
 end
 
 function _draw()
@@ -185,6 +188,8 @@ function _draw()
   spr(hand_sprite, hand.x, hand.y)
 
   map(16, 0, 0, 0)
+  
+  boss:draw()
 
   print('good '..stats.good..' / bad '..stats.bad, 0, 0, 7)
 end
