@@ -13,5 +13,5 @@ function animation_update(self)
 end
 
 function animation_get(self)
-  return self.cycle / self.duration
+  return flr(self.cycle / self.duration)
 end

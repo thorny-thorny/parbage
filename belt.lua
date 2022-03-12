@@ -2,7 +2,7 @@ function belt_create(y, height, duration)
   return {
     y = y,
     height = height,
-    belt_animation = animation_create(0, 4, duration),
+    belt_animation = animation_create(0, 8, duration),
     gears_animation = animation_create(0, 2, duration * 2),
     draw = belt_draw,
     update = belt_update,
