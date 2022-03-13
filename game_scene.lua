@@ -18,6 +18,10 @@ local boss_bad_ending_texts = {
   { "no payment for you", "today, go home" },
 }
 
+local boss_overflow_ending_texts = {
+  { "what have you done" },
+}
+
 local boss_litter_texts = {
   { "pick up that", "*!" },
   { "hey pick it up!" },
@@ -68,6 +72,7 @@ function game_scene_create()
   return {
     shift_time = 0,
     shift_total = 4600,
+    piles_limit = 180,
     boss_level = 0,
     boss_max = 1000,
     boss_weights = {
@@ -89,6 +94,7 @@ function game_scene_create()
     boss_note = nil,
     boss_note_left = 0,
     ending_is_good = false,
+    ending_is_overflow = false,
     env = env_create(),
     boss = boss_create(20, 36),
     hand = hand_create(),
@@ -124,7 +130,12 @@ function game_scene_update(self)
       end
     end
 
-    if self.shift_time >= self.shift_total then
+    if self.env:get_piles_amount() >= self.piles_limit then
+      self.ending_texts = boss_overflow_ending_texts
+      self.ending_texts_left = #boss_good_ending_texts
+      self.ending_is_overflow = true
+      play_track(tracks.silence)
+    elseif self.shift_time >= self.shift_total then
       self.ending_texts = boss_good_ending_texts
       self.ending_texts_left = #boss_good_ending_texts
       self.ending_is_good = true
@@ -220,7 +231,11 @@ function game_scene_update(self)
       else
         self.ending_texts_left -= 1
         if self.ending_texts_left == 0 then
-          show_outro(self.ending_is_good)
+          if self.ending_is_overflow then
+            show_overflow()
+          else
+            show_outro(self.ending_is_good)
+          end
         end
       end
     end

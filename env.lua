@@ -12,9 +12,19 @@ function env_create()
     bag_items = {},
     get_bin_type = env_get_bin_type,
     remove_pile_item = env_remove_pile_item,
+    get_piles_amount = env_get_piles_amount,
     update = env_update,
     draw = env_draw,
   }
+end
+
+function env_get_piles_amount(self)
+  local total = 0
+  for i = 1, #self.piles do
+    total += #(self.piles[i])
+  end
+
+  return total
 end
 
 function env_get_bin_type(self, x, y)

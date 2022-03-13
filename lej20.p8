@@ -15,6 +15,7 @@ __lua__
 #include intro_scene.lua
 #include game_scene.lua
 #include outro_scene.lua
+#include overflow_scene.lua
 #include scene_controller.lua
 
 show_menu()

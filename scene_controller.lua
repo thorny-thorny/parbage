@@ -12,6 +12,10 @@ function show_outro(good)
   scene = outro_scene_create(good)
 end
 
+function show_overflow()
+  scene = overflow_scene_create()
+end
+
 function show_game()
   scene = game_scene_create()
 end
