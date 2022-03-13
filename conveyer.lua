@@ -12,7 +12,15 @@ function conveyer_create(y, height, speed, delay, treasure_inverse_chance)
     belt = belt_create(y, height, cycle_duration),
     update = conveyer_update,
     draw = conveyer_draw,
+    set_speed = conveyer_set_speed,
   }
+end
+
+function conveyer_set_speed(self, speed)
+  local cycle_duration = flr(10 / speed)
+  self.speed = speed
+  self.move_duration = cycle_duration
+  self.belt:set_duration(cycle_duration)
 end
 
 function conveyer_draw(self)
@@ -32,7 +40,7 @@ function conveyer_update(self)
     end
 
     local garbage = set[flr(1 + rnd(#set))]
-    local item = garbage_item_create(garbage, 128 + garbage.width * 4, self.y * 8 + flr(rnd((self.height + 1 - garbage.height) * 8)))
+    local item = garbage_item_create(garbage, 128 + garbage.width * 4, self.y * 8 + 4 + flr(rnd((self.height - garbage.height) * 8)))
     add(self.items, item)
     self.next_spawn = 1 + flr(rnd(self.delay))
   else

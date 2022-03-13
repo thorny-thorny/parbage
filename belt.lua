@@ -6,7 +6,13 @@ function belt_create(y, height, duration)
     gears_animation = animation_create(0, 2, duration * 2),
     draw = belt_draw,
     update = belt_update,
+    set_duration = belt_set_duration,
   }
+end
+
+function belt_set_duration(self, duration)
+  self.belt_animation = animation_create(0, 8, duration)
+  self.gears_animation = animation_create(0, 2, duration * 2)
 end
 
 function belt_draw(self)

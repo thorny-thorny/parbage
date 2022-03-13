@@ -59,6 +59,7 @@ local boss_got_garbage_texts = {
 
 local boss_got_treasure_texts = {
   { "nice!" },
+  { "wink wink" },
   { "i like this", "*" },
   { "do you have", "some more?" },
 }
@@ -69,15 +70,22 @@ function game_scene_create()
     ending_texts = {},
     ending_texts_left = 0,
     shift_time = 0,
-    shift_total = 1000,
+    shift_total = 4600,
     boss_level = 0,
-    boss_max = 100,
+    boss_max = 1000,
     boss_note = nil,
     boss_note_left = 0,
     ending_is_good = false,
     env = env_create(),
     boss = boss_create(20, 36),
-    conveyer = conveyer_create(8, 4, 3, 50, 10),
+    conveyer = conveyer_create(8, 4, 2, 200, 10),
+    conveyer_upgrades = {
+      { time = 500, speed = 3, delay = 150 },
+      { time = 1000, speed = 4, delay = 100 },
+      { time = 2000, speed = 5, delay = 50 },
+      { time = 3000, speed = 10, delay = 20 },
+      { time = 4000, speed = 10, delay = 10 },
+    },
     hand = hand_create(),
     overlay = overlay_create(),
     update = game_scene_update,
@@ -100,7 +108,17 @@ end
 
 function game_scene_update(self)
   if self.intro_texts_left == 0 and self.ending_texts_left == 0 then
+    local prev_time = self.shift_time
     self.shift_time += 1
+
+    for i = 1, #self.conveyer_upgrades do
+      local upgrade = self.conveyer_upgrades[i]
+      if prev_time < upgrade.time and self.shift_time >= upgrade.time then
+        self.conveyer:set_speed(upgrade.speed)
+        self.conveyer.delay = upgrade.delay
+      end
+    end
+
     if self.shift_time >= self.shift_total then
       self.ending_texts = boss_good_ending_texts
       self.ending_texts_left = #boss_good_ending_texts
@@ -128,7 +146,7 @@ function game_scene_update(self)
   local treasures = env_info.treasures
 
   if #fallen_items > 0 then
-    -- self.boss_level += #fallen_items * 10
+    self.boss_level += #fallen_items * 5
     self.boss_note = strs_replace(boss_litter_texts[flr(1 + rnd(#boss_litter_texts))], "*", fallen_items[1].garbage.name)
     self.boss_note_left = 50
     play_sound(sounds.item_fall)
@@ -157,7 +175,7 @@ function game_scene_update(self)
       end
 
       if item_type == garbage_flags.treasure and disposed_item.bin_type == garbage_flags.boss then
-        self.boss_level = max(0, flr(self.boss_level - self.boss_max / 3))
+        self.boss_level = max(0, flr(self.boss_level - 40))
         play_sound(sounds.bribed_boss)
       else
         self.boss_level += 20
