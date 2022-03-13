@@ -20,6 +20,7 @@ function conveyer_set_speed(self, speed)
   local cycle_duration = flr(10 / speed)
   self.speed = speed
   self.move_duration = cycle_duration
+  self.move_cycle = 0
   self.belt:set_duration(cycle_duration)
 end
 
