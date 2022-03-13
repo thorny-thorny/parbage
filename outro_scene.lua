@@ -1,4 +1,10 @@
 function outro_scene_create(good)
+  if good then
+    play_track(tracks.outro_good)
+  else
+    play_track(tracks.outro_bad)
+  end
+
   return {
     good = good,
     dx = 100,

@@ -1,7 +1,9 @@
 function menu_scene_create()
+  play_track(tracks.menu)
+
   return {
     selection = 0,
-    total = 2,
+    total = 3,
     update = menu_scene_update,
     draw = menu_scene_draw,
   }
@@ -10,7 +12,8 @@ end
 function menu_scene_draw(self)
   print("parbage", 40, 40, 7)
   print("start", 50, 60, 7)
-  print("idk", 50, 70, 7)
+  print("good ending", 50, 70, 7)
+  print("bad ending", 50, 80, 7)
   print(">", 40, 60 + self.selection * 10, 7)
 end
 
@@ -27,6 +30,10 @@ function menu_scene_update(self)
   if btnp(🅾️) then
     if self.selection == 0 then
       show_intro()
+    elseif self.selection == 1 then
+      show_outro(true)
+    elseif self.selection == 2 then
+      show_outro(false)
     end
   end
 end

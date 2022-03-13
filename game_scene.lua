@@ -4,6 +4,7 @@ local boss_intro_texts = {
   { "sort garbage from", "conveyer belt into", "the bins" },
   { "don't drop it on", "the floor, keep the", "zone clean!" },
   { "oh and if you find", "any treasure, you", "can keep it" },
+  { "just put it in your", "bag and take away", "after the shift" },
   { "or hand it to me", "to keep it safe...", "ehehehe" },
   { "enought talking", "get working!" },
 }
@@ -39,11 +40,27 @@ local boss_burn_garbage_texts = {
   { "you must burn it", "wrong bin!" },
 }
 
-local garbage_flags = {
-  recycling = 1,
-  organic = 2,
-  burn = 4,
-  treasure = 8,
+local boss_treasure_garbage_texts = {
+  { "did you just", "throw away", "*?" },
+  { "this", "*", "looks pretty valuable" },
+  { "are you nuts?" },
+}
+
+local boss_anti_treasure_garbage_texts = {
+  { "are you taking", "*", "with you?" },
+  { "this is not a", "treasure!" },
+}
+
+local boss_got_garbage_texts = {
+  { "get this shit", "away from my face!" },
+  { "do you want to", "get fired?" },
+  { "grrrrrr" },
+}
+
+local boss_got_treasure_texts = {
+  { "nice!" },
+  { "i like this", "*" },
+  { "do you have", "some more?" },
 }
 
 function game_scene_create()
@@ -60,8 +77,8 @@ function game_scene_create()
     ending_is_good = false,
     env = env_create(),
     boss = boss_create(20, 36),
-    conveyer = conveyer_create(8, 4, 3, 50),
-    hand = hand_create(0, 0),
+    conveyer = conveyer_create(8, 4, 3, 50, 10),
+    hand = hand_create(),
     overlay = overlay_create(),
     update = game_scene_update,
     draw = game_scene_draw,
@@ -88,45 +105,76 @@ function game_scene_update(self)
       self.ending_texts = boss_good_ending_texts
       self.ending_texts_left = #boss_good_ending_texts
       self.ending_is_good = true
+      play_track(tracks.silence)
     elseif self.boss_level >= self.boss_max then
       self.ending_texts = boss_bad_ending_texts
       self.ending_texts_left = #boss_bad_ending_texts
       self.ending_is_good = false
+      play_track(tracks.silence)
     end
 
     local fall_items = self.conveyer:update()
     for i = 1, #fall_items do
       local item = fall_items[i]
-      item.x += -2 + rnd(5)
+      item.x += -2 + flr(rnd(5))
       add(self.env.falling_items, item)
     end
   end
 
   self.boss:update()
-  local fallen_items = self.env:update()
-  local disposed_item = self.hand:update(self.env, self.conveyer)
+  local env_info = self.env:update()
+  local disposed_item = self.hand:update(self.env, self.conveyer, self.boss)
+  local fallen_items = env_info.new_stuck_items
+  local treasures = env_info.treasures
 
   if #fallen_items > 0 then
-    self.boss_level += #fallen_items * 10
+    -- self.boss_level += #fallen_items * 10
     self.boss_note = strs_replace(boss_litter_texts[flr(1 + rnd(#boss_litter_texts))], "*", fallen_items[1].garbage.name)
     self.boss_note_left = 50
+    play_sound(sounds.item_fall)
   end
 
   if disposed_item then
     local item_type = fget(disposed_item.item.garbage.sprite)
-    if item_type ~= disposed_item.bin_type and disposed_item.bin_type ~= garbage_flags.treasure then
+    if item_type ~= disposed_item.bin_type then
       local texts
-      if item_type == garbage_flags.recycling then
+      if disposed_item.bin_type == garbage_flags.treasure then
+        texts = boss_anti_treasure_garbage_texts
+      elseif disposed_item.bin_type == garbage_flags.boss then
+        if item_type == garbage_flags.treasure then
+          texts = boss_got_treasure_texts
+        else
+          texts = boss_got_garbage_texts
+        end
+      elseif item_type == garbage_flags.recycling then
         texts = boss_recycling_garbage_texts
       elseif item_type == garbage_flags.organic then
         texts = boss_organic_garbage_texts
-      else
+      elseif item_type == garbage_flags.burn then
         texts = boss_burn_garbage_texts
+      else
+        texts = boss_treasure_garbage_texts
       end
 
-      self.boss_level += 20
+      if item_type == garbage_flags.treasure and disposed_item.bin_type == garbage_flags.boss then
+        self.boss_level = max(0, flr(self.boss_level - self.boss_max / 3))
+        play_sound(sounds.bribed_boss)
+      else
+        self.boss_level += 20
+        if disposed_item.bin_type == garbage_flags.boss then
+          play_sound(sounds.angered_boss)
+        else
+          play_sound(sounds.wrong_bin)
+        end
+      end
       self.boss_note = strs_replace(texts[flr(1 + rnd(#texts))], "*", disposed_item.item.garbage.name)
       self.boss_note_left = 50
+    else
+      play_sound(sounds.right_bin)
+    end
+
+    if disposed_item.bin_type == garbage_flags.treasure then
+      add(self.env.bag_items, disposed_item.item)
     end
   end
 
@@ -143,6 +191,9 @@ function game_scene_update(self)
     if btnp(🅾️) then
       if self.intro_texts_left > 0 then
         self.intro_texts_left -= 1
+        if self.intro_texts_left == 0 then
+          play_track(tracks.factory)
+        end
       else
         self.ending_texts_left -= 1
         if self.ending_texts_left == 0 then
@@ -157,5 +208,5 @@ function game_scene_update(self)
       text = self.ending_texts[#self.ending_texts + 1 - self.ending_texts_left]
     end
   end
-  self.overlay:update(self.shift_time / self.shift_total, self.boss_level / self.boss_max, text, show_button)
+  self.overlay:update(self.shift_time / self.shift_total, self.boss_level / self.boss_max, treasures, text, show_button)
 end

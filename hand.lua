@@ -1,7 +1,7 @@
-function hand_create(x, y)
+function hand_create()
   return {
-    x = x,
-    y = y,
+    x = 64,
+    y = 64,
     vx = 0,
     vy = 0,
     max_v = 4,
@@ -14,13 +14,13 @@ function hand_create(x, y)
   }
 end
 
-function hand_can_grab_garbage(self, garbage)
-  return abs(self.x - garbage.x) <= 4 and abs(self.y - garbage.y) <= 4
+function hand_can_grab_garbage(self, item)
+  return abs(self.x - item.x) <= item.garbage.width * 4 and abs(self.y - item.y) <= item.garbage.height * 4
 end
 
-function hand_update(self, env, conveyer)
-  self.x += self.vx
-  self.y += self.vy
+function hand_update(self, env, conveyer, boss)
+  self.x = max(0, min(128, self.x + self.vx))
+  self.y = max(0, min(128, self.y + self.vy))
 
   if btn(⬅️) then
     self.vx = max(self.vx - 1, -self.max_v)
@@ -44,7 +44,16 @@ function hand_update(self, env, conveyer)
 
   local conv_item = nil
   local pile_item = nil
+  local bag_item = nil
   local bin_type = env:get_bin_type(self.x, self.y)
+  if bin_type == 0 then
+    local boss_x = boss.x
+    local boss_y = boss.y
+    if self.x >= boss_x and self.x < boss_x + 3 * 8 and self.y > boss_y and self.y < boss_y + 4 * 8 then
+      bin_type = garbage_flags.boss
+    end
+  end
+
   self.can_drop = self.item and bin_type > 0
   self.can_grab = false
   for i = 1, #conveyer.items do
@@ -61,6 +70,10 @@ function hand_update(self, env, conveyer)
         self.can_grab = true
       end
     end
+  end
+  if bin_type == garbage_flags.treasure and #env.bag_items > 0 then
+    bag_item = env.bag_items[flr(1 + rnd(#env.bag_items))]
+    self.can_grab = true
   end
 
   local disposed_item = nil
@@ -88,20 +101,24 @@ function hand_update(self, env, conveyer)
       elseif pile_item then
         self.item = pile_item
         env:remove_pile_item(pile_item)
+      elseif bag_item then
+        self.item = bag_item
+        del(env.bag_items, bag_item)
       end
     end
   end
 
   if self.item then
-    self.item.x = self.x
-    self.item.y = self.y
+    self.item.x = self.x - self.item.garbage.width * 4 - 1
+    self.item.y = self.y + self.item.garbage.height * 4
+    self.item:update()
   end
 
   return disposed_item
 end
 
 function hand_draw(self)
-  local sprite = 51
+  local sprite = 50
 
   if self.item then
     sprite = 48
@@ -110,9 +127,9 @@ function hand_draw(self)
 
   if self.can_drop then
     sprite = 49
-  elseif self.can_grab then
-    sprite = 50
+  elseif self.can_grab and not self.item then
+    sprite = 51
   end
 
-  spr(sprite, self.x, self.y)
+  spr(sprite, self.x - 4, self.y - 4)
 end

@@ -19,7 +19,7 @@ function intro_scene_draw(self)
     draw_animated_button(120, 121, self.button_animation)
   end
 
-  print("something something", 0, 121, 7)
+  print("help wojak with his work", 0, 121, 7)
 end
 
 function intro_scene_update(self)
