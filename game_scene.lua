@@ -72,13 +72,13 @@ function game_scene_create()
   return {
     shift_time = 0,
     shift_total = 4600,
-    piles_limit = 180,
+    piles_limit = 190,
     boss_level = 0,
     boss_max = 1000,
     boss_weights = {
-      item_dropped = 5,
-      bribe = -30,
-      wrong_bin = 30,
+      item_dropped = 8,
+      bribe = -50,
+      wrong_bin = 20,
     },
     conveyer = conveyer_create(8, 4, 2, 200, 10),
     conveyer_upgrades = {
@@ -96,6 +96,7 @@ function game_scene_create()
     boss_note_left = 0,
     ending_is_good = false,
     ending_is_overflow = false,
+    button_disabled = 0,
     env = env_create(),
     boss = boss_create(22, 52),
     hand = hand_create(),
@@ -119,6 +120,10 @@ function game_scene_draw(self)
 end
 
 function game_scene_update(self)
+  if self.button_disabled > 0 then
+    self.button_disabled -= 1
+  end
+
   if self.intro_texts_left == 0 and self.ending_texts_left == 0 then
     local prev_time = self.shift_time
     self.shift_time += 1
@@ -135,16 +140,19 @@ function game_scene_update(self)
       self.ending_texts = boss_overflow_ending_texts
       self.ending_texts_left = #boss_good_ending_texts
       self.ending_is_overflow = true
+      self.button_disabled = 50
       play_track(tracks.silence)
     elseif self.shift_time >= self.shift_total then
       self.ending_texts = boss_good_ending_texts
       self.ending_texts_left = #boss_good_ending_texts
       self.ending_is_good = true
+      self.button_disabled = 50
       play_track(tracks.silence)
     elseif self.boss_level >= self.boss_max then
       self.ending_texts = boss_bad_ending_texts
       self.ending_texts_left = #boss_bad_ending_texts
       self.ending_is_good = false
+      self.button_disabled = 50
       play_track(tracks.silence)
     end
 
@@ -223,8 +231,8 @@ function game_scene_update(self)
   local text = self.boss_note
   local show_button = false
   if self.intro_texts_left > 0 or self.ending_texts_left > 0 then
-    show_button = true
-    if btnp(🅾️) then
+    show_button = self.button_disabled == 0
+    if btnp(🅾️) and show_button then
       if self.intro_texts_left > 0 then
         self.intro_texts_left -= 1
         if self.intro_texts_left == 0 then
