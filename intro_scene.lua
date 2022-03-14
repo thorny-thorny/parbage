@@ -1,4 +1,6 @@
 function intro_scene_create()
+  play_track(tracks.intro)
+
   return {
     dx = 0,
     dy = 0,

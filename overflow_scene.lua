@@ -1,11 +1,12 @@
 function overflow_scene_create()
+  play_track(tracks.overflow)
+  play_sound(sounds.overflow)
+
   local items = {}
 
   for i = 1, 400 do
     add(items, garbage_item_create(all_garbage[flr(1 + rnd(#all_garbage))], 250, 80 + flr(rnd(20))))
   end
-
-  play_sound(sounds.overflow)
 
   return {
     speed = 30,

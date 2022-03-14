@@ -1,10 +1,11 @@
 local tracks = {
   silence = nil,
   menu = nil,
-  intro = nil,
+  intro = 2,
   factory = 0,
-  outro_good = nil,
+  outro_good = 2,
   outro_bad = 1,
+  overflow = nil,
 }
 
 local sounds = {

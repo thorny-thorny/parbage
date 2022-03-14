@@ -2,7 +2,7 @@ local boss_intro_texts = {
   { "you are late again!", "well, what are you", "waiting for?" },
   { "use ⬅️➡️⬆️⬇️ to move", "around and 🅾️ to pick", "and drop items" },
   { "sort garbage from", "conveyer belt into", "the bins" },
-  { "don't let it pile", "up, factory is not", "inflatable!" },
+  { "don't let it pile", "up or factory will", "blow up!" },
   { "oh and if you find", "any treasure, you", "can keep it" },
   { "just put it in your", "bag and take away", "after the shift" },
   { "or hand it to me", "to keep it safe...", "ehehehe" },
@@ -69,6 +69,8 @@ local boss_got_treasure_texts = {
 }
 
 function game_scene_create()
+  play_track(tracks.silence)
+
   return {
     shift_time = 0,
     shift_total = 4600,
