@@ -72,8 +72,8 @@ function game_scene_create()
     boss_max = 1000,
     boss_weights = {
       item_dropped = 5,
-      bribe = -40,
-      wrong_bin = 20,
+      bribe = -30,
+      wrong_bin = 30,
     },
     conveyer = conveyer_create(8, 4, 2, 200, 10),
     conveyer_upgrades = {
