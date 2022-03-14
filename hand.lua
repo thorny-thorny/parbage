@@ -45,7 +45,12 @@ function hand_update(self, env, conveyer, boss)
   local conv_item = nil
   local pile_item = nil
   local bag_item = nil
-  local bin_type = env:get_bin_type(self.x, self.y)
+  local bin_type
+  if self.item then
+    bin_type = env:get_bin_type(self.item.x, self.item.y)
+  else
+    bin_type = env:get_bin_type(self.x, self.y)
+  end
   if bin_type == 0 then
     local boss_x = boss.x
     local boss_y = boss.y
