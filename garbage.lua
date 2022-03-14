@@ -37,10 +37,7 @@ local all_garbage = {
   make_small_garbage("wire", 45, nil),
   make_small_garbage("twine", 9, nil),
   make_small_garbage("t-shirt", 52, nil),
-  make_garbage("tv", 192, 2, 2, make_garbage_animation_config({ 100, 1 }, 1)),
-  make_small_garbage("phone", 18, make_garbage_animation_config({ 30, 1, 1, 10 }, 2)),
   make_small_garbage("letter", 55, nil),
-  make_small_garbage("chair", 56, nil),
   make_garbage("weight", 196, 2, 1, nil),
   make_small_garbage("pencil", 58, nil),
   make_small_garbage("carrot", 59, nil),
@@ -57,6 +54,14 @@ local all_garbage = {
   make_small_garbage("chips", 41, nil),
   make_small_garbage("hot sauce", 28, nil),
   make_small_garbage("perfume", 29, nil),
+
+  make_garbage("trumpet", 212, 2, 1, nil),
+  make_garbage("car", 228, 2, 2, nil),
+  make_garbage("chicken toy", 227, 1, 2, nil),
+  make_garbage("vase", 226, 1, 2, nil),
+  make_garbage("chair", 224, 2, 2, nil),
+  make_garbage("tv", 192, 2, 2, make_garbage_animation_config({ 100, 1 }, 1)),
+  make_small_garbage("phone", 18, make_garbage_animation_config({ 30, 1, 1, 10 }, 2)),
 }
 
 local all_treasures = {

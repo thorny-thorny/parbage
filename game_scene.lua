@@ -2,7 +2,7 @@ local boss_intro_texts = {
   { "you are late again!", "well, what are you", "waiting for?" },
   { "use ⬅️➡️⬆️⬇️ to move", "around and 🅾️ to pick", "and drop items" },
   { "sort garbage from", "conveyer belt into", "the bins" },
-  { "don't drop it on", "the floor, keep the", "zone clean!" },
+  { "don't let it pile", "up, factory is not", "inflatable!" },
   { "oh and if you find", "any treasure, you", "can keep it" },
   { "just put it in your", "bag and take away", "after the shift" },
   { "or hand it to me", "to keep it safe...", "ehehehe" },
@@ -19,7 +19,7 @@ local boss_bad_ending_texts = {
 }
 
 local boss_overflow_ending_texts = {
-  { "what have you done" },
+  { "what have you done!" },
 }
 
 local boss_litter_texts = {
