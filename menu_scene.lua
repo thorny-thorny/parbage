@@ -3,7 +3,7 @@ function menu_scene_create()
 
   return {
     selection = 0,
-    total = 3,
+    total = 1,
     update = menu_scene_update,
     draw = menu_scene_draw,
   }
@@ -12,8 +12,7 @@ end
 function menu_scene_draw(self)
   print("parbage", 40, 40, 7)
   print("start", 50, 60, 7)
-  print("good ending", 50, 70, 7)
-  print("bad ending", 50, 80, 7)
+
   print(">", 40, 60 + self.selection * 10, 7)
 end
 
