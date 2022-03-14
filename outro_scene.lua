@@ -1,4 +1,4 @@
-function outro_scene_create(good)
+function outro_scene_create(good, stats)
   if good then
     play_track(tracks.outro_good)
   else
@@ -7,6 +7,7 @@ function outro_scene_create(good)
 
   return {
     good = good,
+    stats = stats,
     dx = 100,
     dy = 0,
     button_animation = make_button_animation(),
@@ -17,14 +18,18 @@ function outro_scene_create(good)
 end
 
 function outro_scene_draw(self)
-  local map_x = 48
   local start_sprite = 132
-  if not self.good then
-    map_x = 64
+  if self.good then
+    map(48, 0)
+    if self.stats.treasures == 0 then
+      start_sprite = 198
+    end
+  else
     start_sprite = 135
   end
 
-  map(map_x, 0)
+  map(80, 0)
+  map(64, 0)
 
   spr(start_sprite, self.dx - 24, 76, 3, 4, true)
 
@@ -36,12 +41,22 @@ function outro_scene_draw(self)
     end
   end
 
-  local text = "feels good man"
-  if not self.good then
-    text = "feels bad man"
+  local text1 = ""
+  local text2 = ""
+  if self.good then
+    if self.stats.treasures == 0 then
+      text1 = "you got no treasures but job is"
+      text2 = "done. "..tostr(self.stats.sorted).."/"..tostr(self.stats.total).." items sorted"
+    else
+      text1 = "feels good man! you got "..tostr(self.stats.treasures).." trea-"
+      text2 = "sures, "..tostr(self.stats.sorted).."/"..tostr(self.stats.total).." items sorted"
+    end
+  elseif not self.good then
+    text1 = "feels bad man"
   end
 
-  print(text, 0, 113, 7)
+  print(text1, 0, 113, 7)
+  print(text2, 0, 121, 7)
   if self.dx <= 0 then
     draw_animated_button(120, 121, self.button_animation)
   end

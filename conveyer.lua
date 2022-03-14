@@ -4,6 +4,7 @@ function conveyer_create(y, height, speed, delay, treasure_inverse_chance)
     y = y,
     height = height,
     items = {},
+    total = 0,
     next_spawn = 0,
     delay = delay,
     treasure_inverse_chance = treasure_inverse_chance,
@@ -43,6 +44,7 @@ function conveyer_update(self)
     local garbage = set[flr(1 + rnd(#set))]
     local item = garbage_item_create(garbage, 128 + garbage.width * 4, self.y * 8 + 4 + flr(rnd((self.height - garbage.height) * 8)))
     add(self.items, item)
+    self.total += 1
     self.next_spawn = 1 + flr(rnd(self.delay))
   else
     self.next_spawn -= 1

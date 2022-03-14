@@ -8,8 +8,8 @@ function show_intro()
   scene = intro_scene_create()
 end
 
-function show_outro(good)
-  scene = outro_scene_create(good)
+function show_outro(good, stats)
+  scene = outro_scene_create(good, stats)
 end
 
 function show_overflow()

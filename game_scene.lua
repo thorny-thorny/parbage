@@ -88,6 +88,7 @@ function game_scene_create()
       { time = 3000, speed = 10, delay = 20 },
       { time = 4000, speed = 10, delay = 10 },
     },
+    sorted = 0,
     intro_texts_left = #boss_intro_texts,
     ending_texts = {},
     ending_texts_left = 0,
@@ -204,6 +205,7 @@ function game_scene_update(self)
       self.boss_note = strs_replace(texts[flr(1 + rnd(#texts))], "*", disposed_item.item.garbage.name)
       self.boss_note_left = 50
     else
+      self.sorted += 1
       play_sound(sounds.right_bin)
     end
 
@@ -234,7 +236,11 @@ function game_scene_update(self)
           if self.ending_is_overflow then
             show_overflow()
           else
-            show_outro(self.ending_is_good)
+            if self.ending_is_good then
+              show_outro(true, { treasures = treasures, sorted = self.sorted, total = self.conveyer.total })
+            else
+              show_outro(false, nil)
+            end
           end
         end
       end

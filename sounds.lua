@@ -13,6 +13,7 @@ local sounds = {
   angered_boss = 4,
   bribed_boss = 5,
   item_fall = 6,
+  overflow = 7,
 }
 
 function play_track(track)

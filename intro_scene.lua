@@ -11,8 +11,10 @@ end
 
 function intro_scene_draw(self)
   map(32, 0)
+  map(80, 0)
+  map(64, 0)
 
-  spr(132, self.dx - 24, 76, 3, 4)
+  spr(198, self.dx - 24, 76, 3, 4)
 
   print("new day - new shift", 0, 113, 7)
   if self.dx >= self.dx_limit then
