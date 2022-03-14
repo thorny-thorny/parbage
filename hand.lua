@@ -45,16 +45,15 @@ function hand_update(self, env, conveyer, boss)
   local conv_item = nil
   local pile_item = nil
   local bag_item = nil
-  local bin_type
+  local anchor_x = self.x
+  local anchor_y = self.y
   if self.item then
-    bin_type = env:get_bin_type(self.item.x, self.item.y)
-  else
-    bin_type = env:get_bin_type(self.x, self.y)
+    anchor_x = self.item.x
+    anchor_y = self.item.y
   end
+  local bin_type = env:get_bin_type(self.x, self.y)
   if bin_type == 0 then
-    local boss_x = boss.x
-    local boss_y = boss.y
-    if self.x >= boss_x and self.x < boss_x + 3 * 8 and self.y > boss_y and self.y < boss_y + 4 * 8 then
+    if abs(anchor_x - boss.x) <= 4 * 3 and abs(anchor_y - boss.y) <= 4 * 3 then
       bin_type = garbage_flags.boss
     end
   end

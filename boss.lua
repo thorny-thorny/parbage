@@ -1,23 +1,37 @@
 function boss_create(x, y)
   return {
+    x0 = x,
     x = x,
     y = y,
-    face_animation = animation_create(0, 3, 20),
-    walk_animation = animation_create(0, 2, 3),
+    level = 0,
+    walk_animation = animation_create(0, 24, 3),
+    flipped = false,
     draw = boss_draw,
     update = boss_update,
   }
 end
 
 function boss_update(self)
-  self.face_animation:update()
   self.walk_animation:update()
+
+  local half_steps = flr(self.walk_animation.steps / 2)
+  local direction = self.walk_animation:get() - half_steps
+  local delta_x = 0
+  if direction < 0 then
+    delta_x = -(direction + half_steps)
+    self.flipped = false
+  else
+    delta_x = direction - half_steps
+    self.flipped = true
+  end
+
+  self.x = self.x0 + delta_x
 end
 
 function boss_draw(self)
-  spr(64 + self.face_animation:get(), self.x, self.y)
-  spr(81, self.x - 8, self.y + 8)
-  spr(82, self.x, self.y + 8)
-  spr(83, self.x + 8, self.y + 8)
-  spr(98 + self.walk_animation:get(), self.x, self.y + 16)
+  local x = self.x - 4 * 3
+
+  spr(66 - self.level, x + 8, self.y, 1, 1, self.flipped)
+  spr(81, x, self.y + 8, 3, 1, self.flipped)
+  spr(98, x + 8, self.y + 16, 1, 1, self.flipped)
 end

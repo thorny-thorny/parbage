@@ -96,7 +96,7 @@ function game_scene_create()
     ending_is_good = false,
     ending_is_overflow = false,
     env = env_create(),
-    boss = boss_create(20, 36),
+    boss = boss_create(22, 36),
     hand = hand_create(),
     overlay = overlay_create(),
     update = game_scene_update,
@@ -246,5 +246,7 @@ function game_scene_update(self)
       text = self.ending_texts[#self.ending_texts + 1 - self.ending_texts_left]
     end
   end
+
+  self.boss.level = min(2, flr(self.boss_level * 3 / self.boss_max))
   self.overlay:update(self.shift_time / self.shift_total, self.boss_level / self.boss_max, treasures, text, show_button)
 end
