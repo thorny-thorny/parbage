@@ -53,7 +53,7 @@ function hand_update(self, env, conveyer, boss)
   end
   local bin_type = env:get_bin_type(self.x, self.y)
   if bin_type == 0 then
-    if abs(anchor_x - boss.x) <= 4 * 3 and abs(anchor_y - boss.y) <= 4 * 3 then
+    if abs(anchor_x - boss.x) <= 4 * 3 and abs(anchor_y - boss.y) <= 4 * 4 then
       bin_type = garbage_flags.boss
     end
   end
