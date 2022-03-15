@@ -1,6 +1,9 @@
 pico-8 cartridge // http://www.pico-8.com
 version 35
 __lua__
+-- parbage
+-- by softsound and thorny
+
 #include sounds.lua
 #include animation.lua
 #include utils.lua
